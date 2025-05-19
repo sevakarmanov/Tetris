@@ -1,5 +1,8 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
+using System.Reflection.Emit;
+using Tetris;
+
 namespace Tetris
 {
     class Program
@@ -9,32 +12,41 @@ namespace Tetris
             Console.SetWindowSize(40, 30);
             Console.SetBufferSize(40, 30);
 
-            Figure s = new Stick(20, 5, '*');
-            s.Draw();
+            FigureGenerator generator = new FigureGenerator(20, 0, '*');
+            Figure s = null;
 
-            Thread.Sleep(500);
+            while (true)
+            {
+                FigureFall(s, generator);
+                s.Draw();
+            }
 
-            s.Hide();
-            s.Rotate();
-            s.Draw();
+            //Figure s = generator.GetNewFigure();
+            //s.Draw();
 
-            Thread.Sleep(500);
+            //Thread.Sleep(200);
 
-            s.Hide();
-            s.Move(Direction.RIGHT);
-            s.Draw();
+            //s.Hide();
+            //s.Rotate();
+            //s.Draw();
 
-            Thread.Sleep(500);
+            //Thread.Sleep(500);
 
-            s.Hide();
-            s.Move(Direction.RIGHT);
-            s.Draw();
+            //s.Hide();
+            //s.Move(Direction.RIGHT);
+            //s.Draw();
 
-            Thread.Sleep(500);
+            //Thread.Sleep(500);
 
-            s.Hide();
-            s.Rotate();
-            s.Draw();
+            //s.Hide();
+            //s.Move(Direction.RIGHT);
+            //s.Draw();
+
+            //Thread.Sleep(500);
+
+            //s.Hide();
+            //s.Rotate();
+            //s.Draw();
 
             //Figure[] f = new Figure[2];
             //f[0] = new Square(2, 5, '*');
@@ -61,6 +73,22 @@ namespace Tetris
 
             Console.ReadLine();
         }
+
+        static void FigureFall(Figure fig, FigureGenerator generator)
+        {
+            fig = generator.GetNewFigure();
+            fig.Draw();
+
+            for (int i = 0; i < 15; i++)
+            {
+                fig.Hide();
+                fig.Move(Direction.DOWN);
+                fig.Draw();
+
+                Thread.Sleep(200);
+            }
+        }
     }
 }
+
 
