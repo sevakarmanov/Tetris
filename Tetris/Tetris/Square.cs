@@ -23,5 +23,7 @@ namespace Tetris
                 p.Hide();
             }
         }
+
+        public override void Rotate() { }
     }
 }
