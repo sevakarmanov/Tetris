@@ -7,12 +7,14 @@ namespace Tetris
 {
     class Program
     {
+
         static void Main(string[] args)
         {
-            Console.SetWindowSize(40, 30);
-            Console.SetBufferSize(40, 30);
 
-            FigureGenerator generator = new FigureGenerator(20, 0, '*');
+            Console.SetWindowSize(Field.WIDGHT, Field.HEIGHT);
+            Console.SetBufferSize(Field.WIDGHT, Field.HEIGHT);
+
+            FigureGenerator generator = new FigureGenerator(Field.WIDGHT/2, 0, '*');
             Figure currentFigure = generator.GetNewFigure();
 
             while (true)
@@ -31,13 +33,16 @@ namespace Tetris
             switch (key.Key)
             {
                 case ConsoleKey.LeftArrow:
-                    currentFigure.Move(Direction.LEFT);
+                    currentFigure.TryMove(Direction.LEFT);
                     break;
                 case ConsoleKey.RightArrow:
-                    currentFigure.Move(Direction.RIGHT);
+                    currentFigure.TryMove(Direction.RIGHT);
                     break;
                 case ConsoleKey.DownArrow:
-                    currentFigure.Move(Direction.DOWN);
+                    currentFigure.TryMove(Direction.DOWN);
+                    break;
+                case ConsoleKey.Spacebar:
+                    currentFigure.TryRotate();
                     break;
             }
         }
