@@ -11,10 +11,10 @@ namespace Tetris
         static void Main(string[] args)
         {
 
-            Console.SetWindowSize(Field.WIDGHT, Field.HEIGHT);
-            Console.SetBufferSize(Field.WIDGHT, Field.HEIGHT);
+            Field.Width = 40;
+            Field.Height = 30;
 
-            FigureGenerator generator = new FigureGenerator(Field.WIDGHT/2, 0, '*');
+            FigureGenerator generator = new FigureGenerator(Field.Width/ 2, 0, '*');
             Figure currentFigure = generator.GetNewFigure();
 
             while (true)
