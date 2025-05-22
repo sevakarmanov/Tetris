@@ -1,14 +1,19 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
 using System.Reflection.Emit;
+using System.Timers;
 using Tetris;
 
 namespace Tetris
 {
     class Program
     {
+        const int TIMER_INTERVAL = 500;
+        private static System.Timers.Timer Timer;
+
         static Figure currentFigure;
         static FigureGenerator generator;
+
         static void Main(string[] args)
         {
 
@@ -18,6 +23,8 @@ namespace Tetris
             generator = new FigureGenerator(Field.Width/ 2, 0, Drawer.DEFAULT_SYMBOL);
             currentFigure = generator.GetNewFigure();
 
+            SetTimer();
+
             while (true)
             {
                 if (Console.KeyAvailable)
@@ -26,8 +33,23 @@ namespace Tetris
                     var result = HandleKey(currentFigure, key);
                     ProcessResult(result, ref currentFigure);
                 }
-
             }
+        }
+
+        private static void SetTimer()
+        {
+            // Create a timer with a two second interval.
+            Timer = new System.Timers.Timer(TIMER_INTERVAL);
+            // Hook up the Elapsed event for the timer. 
+            Timer.Elapsed += OnTimedEvent;
+            Timer.AutoReset = true;
+            Timer.Enabled = true;
+        }
+
+        private static void OnTimedEvent(Object source, ElapsedEventArgs e)
+        {
+            var result = currentFigure.TryMove(Direction.DOWN);
+            ProcessResult(result, ref currentFigure);
         }
 
         private static bool ProcessResult(Result result, ref Figure currentFigure)
