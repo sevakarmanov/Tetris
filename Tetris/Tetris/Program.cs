@@ -11,6 +11,8 @@ namespace Tetris
         const int TIMER_INTERVAL = 500;
         private static System.Timers.Timer Timer;
 
+        static private Object _lockObject = new object();
+
         static Figure currentFigure;
         static FigureGenerator generator;
 
@@ -30,8 +32,10 @@ namespace Tetris
                 if (Console.KeyAvailable)
                 {
                     var key = Console.ReadKey();
+                    Monitor.Enter(_lockObject);
                     var result = HandleKey(currentFigure, key);
                     ProcessResult(result, ref currentFigure);
+                    Monitor.Exit(_lockObject);
                 }
             }
         }
@@ -48,8 +52,10 @@ namespace Tetris
 
         private static void OnTimedEvent(Object source, ElapsedEventArgs e)
         {
+            Monitor.Enter(_lockObject);
             var result = currentFigure.TryMove(Direction.DOWN);
             ProcessResult(result, ref currentFigure);
+            Monitor.Exit(_lockObject);
         }
 
         private static bool ProcessResult(Result result, ref Figure currentFigure)
