@@ -12,10 +12,10 @@ namespace Tetris
         static void Main(string[] args)
         {
 
-            Field.Width = 40;
-            Field.Height = 30;
+            Field.Width = 20;
+            Field.Height = 20;
 
-            generator = new FigureGenerator(Field.Width/ 2, 0, '*');
+            generator = new FigureGenerator(Field.Width/ 2, 0, Drawer.DEFAULT_SYMBOL);
             currentFigure = generator.GetNewFigure();
 
             while (true)
@@ -35,6 +35,7 @@ namespace Tetris
             if (result == Result.HEAP_STRIKE || result == Result.DOWN_BORDER_STRIKE)
             {
                 Field.AddFigure(currentFigure);
+                Field.TryToClearLine();
                 currentFigure = generator.GetNewFigure();
                 return true;
             }
