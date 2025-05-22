@@ -9,48 +9,58 @@ namespace Tetris
     abstract class Figure
     {
         const int LENGHT = 4;
-        protected Point[] points = new Point[LENGHT];
+        public Point[] Points = new Point[LENGHT];
 
         public void Draw()
         {
-            foreach (Point p in points)
+            foreach (Point p in Points)
             {
                 p.Draw();
             }
         }
 
-        internal void TryMove(Direction dir)
+        internal Result TryMove(Direction dir)
         {
             Hide();
             var clone = Clone();
             Move(clone, dir);
 
-            if (VerifyPosition(clone))
-                points = clone;
+            var result = VerifyPosition(clone);
+            if (result == Result.SUCCESS)
+                Points = clone;
 
             Draw();
+            return result;
         }
 
-        internal void TryRotate()
+        internal Result TryRotate()
         {
             Hide();
             var clone = Clone();
             Rotate(clone);
-            if (VerifyPosition(clone))
-                points = clone;
+
+            var result = VerifyPosition(clone);
+            if (result == Result.SUCCESS)
+                Points = clone;
 
             Draw();
+            return result;
         }
 
-        private bool VerifyPosition(Point[] pList)
+        private Result VerifyPosition(Point[] newPoints)
         {
-            foreach(var p in pList)
+            foreach(var p in newPoints)
             {
-                if (p.X < 0 || p.Y < 0 || p.X >= Field.Width || p.Y >= Field.Height)
-                    return false;   
-            }
+                if (p.Y >= Field.Height)
+                    return Result.DOWN_BORDER_STRIKE;
 
-            return true;
+                if (p.X < 0 || p.Y < 0 || p.X >= Field.Width)
+                    return Result.BORDER_STRIKE; 
+                
+                if (Field.CheckStrike(p))  
+                    return Result.HEAP_STRIKE;
+            }
+            return Result.SUCCESS;
         }
 
         private Point[] Clone()
@@ -58,7 +68,7 @@ namespace Tetris
             var newPoints = new Point[LENGHT];
             for (int i = 0; i < LENGHT; i++)
             {
-                newPoints[i] = new Point (points[i]);
+                newPoints[i] = new Point (Points[i]);
             }
             return newPoints;
         }
@@ -71,19 +81,9 @@ namespace Tetris
             }
         }
 
-        //public void Move(Direction dir)
-        //{
-        //    Hide(); 
-        //    foreach(Point p in points)
-        //    {
-        //        p.Move(dir);
-        //    }
-        //    Draw();
-        //}
-
         public void Hide()
         {
-            foreach (Point p in points)
+            foreach (Point p in Points)
             {
                 p.Hide();
             }
